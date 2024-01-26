@@ -15,14 +15,14 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/RAMESHKUMARVERMAGITHUB/demo_nodejs_webpage.git'
+                git branch: 'main', url: 'https://github.com/RAMESHKUMARVERMAGITHUB/DevOps_project1.git'
             }
         }
         stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=demo_nodejs_webpage \
-                    -Dsonar.projectKey=demo_nodejs_webpage'''
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=demo \
+                    -Dsonar.projectKey=demo'''
                 }
             }
         }
@@ -47,21 +47,21 @@ pipeline {
              steps{
                  script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                      sh "docker build -t rameshkumarverma/demo_nodejs_webpage:latest ."
-                    //   sh "docker tag demo_nodejs_webpage rameshkumarverma/demo_nodejs_webpage:latest "
-                      sh "docker push rameshkumarverma/demo_nodejs_webpage:latest "
+                      sh "docker build -t rameshkumarverma/demo:latest ."
+                    //   sh "docker tag demo rameshkumarverma/demo:latest "
+                      sh "docker push rameshkumarverma/demo:latest "
                     }
                 }
             }
         }
         stage("TRIVY Image Scan"){
             steps{
-                sh "trivy image rameshkumarverma/demo_nodejs_webpage:latest > trivyimage.txt" 
+                sh "trivy image rameshkumarverma/demo:latest > trivyimage.txt" 
             }
         }
         stage('docker deploy'){
             steps{
-                sh "docker run -d -p 8080:8080 rameshkumarverma/demo_nodejs_webpage:latest" 
+                sh "docker run -d -p 80:80 rameshkumarverma/demo:latest" 
             }
         }
         stage('Deploy to Kubernets'){
