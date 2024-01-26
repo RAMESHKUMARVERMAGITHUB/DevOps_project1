@@ -33,11 +33,11 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh "npm install"
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         sh "npm install"
+        //     }
+        // }
         stage('TRIVY FS SCAN') {
              steps {
                  sh "trivy fs . > trivyfs.txt"
@@ -64,20 +64,20 @@ pipeline {
                 sh "docker run -d -p 80:80 rameshkumarverma/demo:latest" 
             }
         }
-        stage('Deploy to Kubernets'){
-            steps{
-                script{
-                    // dir('kubernetes') {
-                        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                        // sh 'kubectl delete --all pods'
-                        // sh 'kubectl apply -f deployment.yml'
-                        // sh 'kubectl apply -f service.yml'
-                          sh 'kubectl apply -f k8s.yml'
-                        }   
-                    // }
-                }
-            }
-        }
+        // stage('Deploy to Kubernets'){
+        //     steps{
+        //         script{
+        //             // dir('kubernetes') {
+        //                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'k8s', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+        //                 // sh 'kubectl delete --all pods'
+        //                 // sh 'kubectl apply -f deployment.yml'
+        //                 // sh 'kubectl apply -f service.yml'
+        //                   sh 'kubectl apply -f k8s.yml'
+        //                 }   
+        //             // }
+        //         }
+        //     }
+        // }
     }
     // post {
     //  always {
